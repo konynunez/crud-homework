@@ -99,7 +99,7 @@ export default function ManagementPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="border-gray-300 rounded mb-4 w-72 mx-auto">
       <h1 className="text-4xl text-center mb-8">Management Page</h1>
 
       <form onSubmit={currentShow ? handleUpdateShow : handleAddShow} className="mb-8">
@@ -116,8 +116,8 @@ export default function ManagementPage() {
       </form>
 
       {showList.shows.map((show, index) => (
-        <div key={index} className="p-4 border border-gray-300 rounded mb-4">
-          <h2 className="text-xl font-bold">{show.name}</h2>
+        <div key={index} className="p-4 border border-gray-300 rounded mb-4 w-72 mx-auto">
+        <h2 className="text-xl font-bold">{show.name}</h2>
           <p><strong>Year:</strong> {show.year}</p>
           <p><strong>Genre:</strong> {show.genre}</p>
           <p><strong>Cast:</strong> {show.cast}</p>
