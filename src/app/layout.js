@@ -2,7 +2,6 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -14,24 +13,24 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="w-100">
-          <nav className="flex justify-center w-100 ">
-            <Link
-              className="m-1 text-pink-700 hover:text-pink-900"
-              href="/"
-            >
-              Home
-            </Link>
-            <Link
-              className="m-1 text-pink-700 hover:text-pink-900"
-              href="/management"
-            >
-              Management
-            </Link>
+        <header className="bg-gray-900 text-white">
+          <nav className="container mx-auto flex items-center justify-between py-4">
+            <div className="flex items-center justify-center space-x-6">
+              <Link href="/">
+                <div className="text-3xl font-bold text-white cursor-pointer hover:text-gray-300">
+                  Home
+                </div>
+              </Link>
+              <Link href="/management">
+                <div className="text-3xl text-white cursor-pointer hover:text-gray-300">
+                  Management
+                </div>
+              </Link>
+            </div>
           </nav>
         </header>
         {children}
-        <footer className="text-center text-pink-700">&copy;Panoaramix Design</footer>
+        <footer className="text-center text-gray-600 mt-8">&copy; Panoaramix Design</footer>
       </body>
     </html>
   );
