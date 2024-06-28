@@ -13,7 +13,8 @@ export default function Home() {
     async function fetchData() {
       try {
         const documents = await getAllDocuments(db, "shows");
-        const showInstances = documents.map((doc) => {
+        const showInstances = documents.map((doc        
+        ) => {
           return new Show(doc.title, doc.year, doc.genre, doc.episodes);
         });
         setList(new List(list.name, showInstances));
