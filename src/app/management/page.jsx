@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Show, List } from "../../utils/list";
 import ShowComponent from "../../components/Show";
+import { Show, List } from "../../utils/list";
 import {
   getAllDocuments,
   addDocument,
@@ -11,7 +11,8 @@ import {
 import { db } from "../../../firebase.config";
 
 export default function ManagementPage() {
-  const [list, setList] = useState(new List("Wuxia/Xanxia Content", []));
+  const [list, setList] = useState(new List("The best series!", []));
+
 
   useEffect(() => {
     async function fetchData() {
@@ -19,160 +20,151 @@ export default function ManagementPage() {
         const documents = await getAllDocuments(db, "shows");
         const showInstances = documents.map((doc) => {
           const show = new Show(
-            doc.name,
+            doc.title,
             doc.year,
             doc.genre,
-            doc.cast,
-            doc.episodes
+            doc.episodes,
           );
           show.id = doc.id;
           return show;
         });
-        console.log(showInstances);
-        setList(new List(list.id, showInstances));
+        console.log(showInstances)
+        setList(new List(list.name, showInstances));
       } catch (error) {
-        console.log("Failed fetching data", error);
+        console.error("Failed fetching data", error);
       }
     }
 
     fetchData();
     return () => {
-      console.log("get all docs cleanup");
+      console.log("Cleanup");
     };
-  }, [list.id]);
+  }, []);
 
   function handleAddShow(e) {
     e.preventDefault();
 
     const newShow = new Show(
-      e.target.name.value,
+      e.target.title.value,
       e.target.year.value,
       e.target.genre.value,
-      e.target.cast.value,
       parseInt(e.target.episodes.value)
     );
 
     addDocument(db, "shows", {
-      name: newShow.name,
-      year: newShow.year,
-      genre: newShow.genre,
-      cast: newShow.cast,
+      title: e.target.title.value,
+      year: e.target.year.value,
+      genre: e.target.genre.value,
       episodes: parseInt(e.target.episodes.value),
     });
 
-    const newList = new List(list.id, list.shows);
-    newList.addShow(newShow);
+    const newList = new List(list.name, list.shows);
+    newList.addShow(newShow);  
 
     setList(newList);
   }
+
+  /**
+   * 
+   * @param {show} showToUpdate an instance of show class
+   */
 
   async function updateShow(showToUpdate) {
-    console.log("UPDATED SHOW FROM LIST", showToUpdate);
+    console.log("UPDATED SHOW", showToUpdate);
 
     const showObj = {
-      name: showToUpdate.name,
+      title: showToUpdate.title,
       year: showToUpdate.year,
       genre: showToUpdate.genre,
-      cast: showToUpdate.cast,
       episodes: showToUpdate.episodes,
     };
-
+  
     await updateDocument(db, "shows", showToUpdate.id, showObj);
 
-    const newShows = list.shows.map((show) => {
+    const newShow = list.shows.map((show) => {
       return show.genre === showToUpdate.genre ? showToUpdate : show;
     });
-
-    const newList = new List("Kony's Latest seen Shows", newShows);
-
+    
+    const newList = new List("The best series!", newShow);
+    
     setList(newList);
-  }
+    }
 
-  async function deleteShow(genre, docID) {
-    const newList = new List(list.id, list.shows);
-    newList.removeShow(genre);
-    await deleteDocument(db, "shows", docID);
-    setList(newList);
-  }
+    async function deleteShow(genre, docID) {
+      await deleteDocument(db, "shows", docID);
+      const newList = new List(list.name. list.shows);
+      newList.removeShow(genre);
+      
+      setList(newList);   
+    }
 
   return (
     <div>
-      <h1 className="py-12 text-6xl text-center bg-blue-500">
+      <h1 className="py-12 text-6xl text-center bg-indigo-500">
         Management Page
       </h1>
-      <h2 className="py-3 text-3xl text-center bg-blue-300">
-        The best movies site
+      <h2 className="py-3 text-3xl text-center bg-indigo-100">
+        Historic Drama Series!
       </h2>
       <form
         onSubmit={handleAddShow}
-        className="p-5 m-5 border border-blue-800"
+        className="p-5 m-5 border border-indigo-400"
       >
+        <h2 className="mb-2 text-2xl">Add a Show</h2>
         <div>
           <input
-            className="w-1/4 p-1 border rounded border-blue-600"
-            placeholder="name"
+            className="w-1/4 p-1 border rounded border-indigo-400"
+            placeholder="Title"
             type="text"
-            name="name"
-            id="name-input"
+            name="title"
             required
           />
           <input
-            className="w-1/4 p-1 border rounded border-blue-600"
+            className="w-1/4 p-1 border rounded border-indigo-400"
             placeholder="Year"
             type="text"
             name="year"
-            id="year-input"
             required
           />
           <input
-            className="w-1/4 p-1 border rounded border-blue-600"
+            className="w-1/4 p-1 border rounded border-indigo-400"
             placeholder="Genre"
             type="text"
             name="genre"
-            id="genre-input"
             required
           />
           <input
-            className="w-1/4 p-1 border rounded border-blue-600"
-            placeholder="Cast"
-            type="text"
-            name="cast"
-            id="cast-input"
-            required
-          />
-          <input
-            className="w-1/4 p-1 border rounded border-blue-600"
+            className="w-1/4 p-1 border rounded border-indigo-400"
             placeholder="Episodes"
             type="number"
             name="episodes"
-            id="episodes-input"
             min={0}
             required
           />
-          <button
-            className="p-2 my-4 border rounded border-blue-600"
-            type="submit"
-          >
-            Submit
-          </button>
         </div>
+        <button
+          className="p-2 my-4 border rounded border-indigo-500 hover:bg-indigo-900"
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
-      {list.shows.map((show, index) => {
-        return (
-          <ShowComponent
-            id={show.id}
-            key={index}
-            name={show.name}
-            year={show.year}
-            cast={show.cast}
-            genre={show.genre}
-            episodes={show.episodes}
-            updateShow={updateShow}
-            deleteShow={deleteShow}
-            isManagementPage={true}
-          />
-        );
-      })}
+
+        {list.shows.map((show, index) => {
+          return (
+            <ShowComponent
+              key={index}
+              id={show.id}
+              title={show.title}
+              year={show.year}
+              genre={show.genre}
+              episodes={show.episodes}
+              updateShow={updateShow}
+              deleteShow={deleteShow}
+              isManagementPage={true}
+            />
+          )
+        })}
     </div>
   );
 }

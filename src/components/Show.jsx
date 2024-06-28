@@ -5,7 +5,7 @@ import { Show } from "@/utils/list";
 export default function ShowComponent({
   id,
   episodes,
-  name,
+  title,
   updateShow,
   genre,
   year,
@@ -14,19 +14,19 @@ export default function ShowComponent({
 }) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const [updatedBook, setUpdatedShow] = useState({
-    name,
+  const [updatedShow, setUpdatedShow] = useState({
+    title,
     year,
     genre,
     episodes,
-    updatedShow,
+    updateShow,
   });
 
   function handleUpdateFormSubmit(e) {
     e.preventDefault();
 
-    const newBook = new Show(
-      updatedShow.name,
+    const newShow = new Show(
+      updatedShow.title,
       updatedShow.year,
       updatedShow.genre,
       updatedShow.episodes
@@ -39,8 +39,9 @@ export default function ShowComponent({
     updateShow(newShow);
     setIsEditing(false);
   }
+
   return (
-    <div className="flex justify-between p-5 m-5 overflow-auto border border-black rounded-md bg-emerald-500">
+    <div className="flex justify-between p-5 m-5 overflow-auto border border-black rounded-md bg-indigo-500">
       {isEditing ? (
         <form
           onSubmit={handleUpdateFormSubmit}
@@ -48,20 +49,20 @@ export default function ShowComponent({
         >
           <div className="">
             <input
-              className="block p-1 border rounded border-emerald-600"
-              placeholder="name"
+              className="block p-1 border rounded border-indigo-300"
+              placeholder="Title"
               type="text"
-              name="name"
-              id="name-input"
+              name="title"
+              id="title-input"
               required
-              value={updatedShow.name}
+              value={updatedShow.title}
               onChange={(e) =>
-                setUpdatedShow({ ...updatedShow,  name: e.target.value })
+                setUpdatedShow({ ...updatedShow, title: e.target.value })
               }
             />
             <input
-              className="block p-1 border rounded border-emerald-600"
-              placeholder="year"
+              className="block p-1 border rounded border-indigo-300"
+              placeholder="Year"
               type="text"
               name="year"
               id="year-input"
@@ -71,36 +72,34 @@ export default function ShowComponent({
                 setUpdatedShow({ ...updatedShow, year: e.target.value })
               }
             />
-
             <input
-              className="block p-1 border rounded border-emerald-600"
+              className="block p-1 border rounded border-indigo-300"
               placeholder="episodes"
               type="number"
-              name="episodes-input"
-              // id="available-parts"
+              name="episodes"
               min={0}
               required
               value={updatedShow.episodes}
               onChange={(e) =>
-                setUpdatedBook({
+                setUpdatedShow({
                   ...updatedShow,
                   episodes: e.target.value,
                 })
               }
             />
             <input
-              className="block p-1 border rounded border-emerald-600"
+              className="block p-1 border rounded border-indigo-300"
               placeholder="genre"
               type="text"
               name="genre"
               id="genre-input"
               required
-              value={updatedSgow.genre}
+              value={updatedShow.genre}
               disabled
             />
           </div>
           <button
-            className="p-2 my-4 border rounded border-emerald-500 hover:bg-emerald-600"
+            className="p-2 my-4 border rounded border-indigo-500 hover:bg-indigo-600"
             type="submit"
           >
             Submit
@@ -109,17 +108,17 @@ export default function ShowComponent({
       ) : (
         <>
           <div>
-            <p className="my-1">Name: {name}</p>
-            <p className="my-1">year: {year}</p>
-            <p className="my-1">Cast: {cast}</p>
+            <p className="my-1">Title: {title}</p>
+            <p className="my-1">Year: {year}</p>
+            <p className="my-1">Genre: {genre}</p>
             <p className="my-1">Episodes: {episodes}</p>
           </div>
           {isManagementPage && (
             <div>
               <button
                 onClick={() => setIsEditing(true)}
-                title="Edit this show"
-                className="p-2 my-4 rounded border-emerald-900 hover:bg-emerald-600"
+                title="Edit show"
+                className="p-2 my-4 rounded border-indigo-900 hover:bg-indigo-600"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -139,8 +138,8 @@ export default function ShowComponent({
 
               <button
                 onClick={() => deleteShow(genre, id)}
-                title="Edit this book"
-                className="p-2 my-4 rounded border-emerald-900 hover:bg-emerald-600"
+                title="Delete this show"
+                className="p-2 my-4 rounded border-indigo-900 hover:bg-indigo-600"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

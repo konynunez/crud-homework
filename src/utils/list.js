@@ -1,19 +1,18 @@
 class Show {
-  constructor(name, year, genre, cast, episodes) {
-    this.name = name;
+  constructor(title, year, genre, episodes) {
+    this.title = title;
     this.year = year;
     this.genre = genre;
-    this.cast = cast;
     this.episodes = episodes;
 
     this.borrowShow = function () {
       if (this.episodes > 0) {
         this.episodes -= 1;
       } else if (this.episodes == 0) {
-        console.log(`No more episodes to watch for ${this.name}`);
+        console.log(`No more episodes ${this.title}`);
       }
     };
-
+    
     this.returnShow = function () {
       this.episodes += 1;
     };
@@ -21,15 +20,17 @@ class Show {
 }
 
 class List {
-  constructor(id, shows) {
-    this.id = id;
+  constructor(name, shows) {
+    //String name
+    this.title = title;
+    //Array of book objects
     this.shows = shows;
-
-    this.addShow = function (newShow) {
-      const oldShow = this.shows.find(
+    // Function to add a book to the Library
+    this.addShows = function (newShow) {
+      const oldBook = this.books.find(
         (show) =>
-          show.name.toLowerCase() == newShow.name.toLowerCase() &&
-          show.cast.toLowerCase() == newShow.cast.toLowerCase()
+          show.genre.toLowerCase() == newShow.genre.toLowerCase() &&
+          show.title.toLowerCase() == newShow.title.toLowerCase()
       );
       if (oldShow != undefined) {
         oldShow.episodes += newShow.episodes;
@@ -37,23 +38,34 @@ class List {
         this.shows.push(newShow);
       }
     };
-
-    this.findShowByName = function (searchedName) {
-      const matchedShow = this.shows.find(
-        (show) => show.name.toLowerCase() == searchedName.toLowerCase()
+    //Function to remove a show from the list using the genre.
+    this.removeShow = function (genre) {
+      const show = this.shows.find(
+        (show) => show.genre.toLowerCase() == genre.toLowerCase()
       );
-      if (matchedShow) {
+      this.shows.splice(show, 1);
+    };
+    //Function to find a show by the name of the show.
+    this.findShowByTitle = function (searchedName) {
+      const matchedShow = this.shows.find(
+        (show) => show.title.toLowerCase() == searchedName.toLowerCase()
+      );
+      //If the show is found return the show
+      if (matchedShow != undefined) {
         return matchedShow;
       } else {
-        console.log(`No show found with the name ${searchedName}`);
+        //Log if no show is found
+        console.log(`No show found with a name of ${searchedName}`);
       }
     };
-
+    //Function to display the details of all shows in the List.
     this.listAllShows = function () {
       this.shows.forEach((show) => {
-        console.log(
-          `Name: ${show.name} Cast: ${show.cast} Year: ${show.year} Genre: ${show.genre} Episodes: ${show.episodes}`
-        );
+        console.log(`title: ${show.title}
+Year: ${show.year}
+Genre: ${show.genre}
+episodes: ${show.episodes}
+`);
       });
     };
   }
