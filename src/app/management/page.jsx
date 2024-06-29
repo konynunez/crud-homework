@@ -81,21 +81,12 @@ export default function ManagementPage() {
   
     await updateDocument(db, "shows", showToUpdate.id, showObj);
 
-    const newShow = list.shows.map((show) => {
-      return show.genre === showToUpdate.genre ? showToUpdate : show;
-    });
-    
-    const newList = new List("The best series!", newShow);
-    
-    setList(newList);
+    location.reload();  
     }
 
     async function deleteShow(genre, docID) {
       await deleteDocument(db, "shows", docID);
-      const newList = new List(list.name. list.shows);
-      newList.removeShow(genre);
-      
-      setList(newList);   
+      location.reload();    
     }
 
   return (
