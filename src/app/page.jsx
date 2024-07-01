@@ -27,7 +27,7 @@ export default function Home() {
     return () => {
       console.log("cleaning up...")
     }
-  }, []);
+  }, [list.name]);
 
   return (
     <main style={{ minHeight: "85vh" }}>

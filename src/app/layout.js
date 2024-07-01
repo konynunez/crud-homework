@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
           </nav>
         </header>
         {children}
-        <footer className="text-center">&copy; Panoramix Design</footer>
+        <footer className="text-center">&copy; Panoramix</footer>
       </body>
     </html>
   );

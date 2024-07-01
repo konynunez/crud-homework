@@ -38,7 +38,7 @@ export default function ManagementPage() {
     return () => {
       console.log("Cleanup");
     };
-  }, [list.name]); // Add list.name as a dependency here
+  }, [list.name]);
 
   function handleAddShow(e) {
     e.preventDefault();
@@ -94,7 +94,7 @@ export default function ManagementPage() {
         Management Page
       </h1>
       <h2 className="py-3 text-3xl text-center bg-indigo-100">
-        Historic Drama Series!
+        The Best Series by Far!
       </h2>
       <form
         onSubmit={handleAddShow}
