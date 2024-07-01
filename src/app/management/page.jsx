@@ -13,7 +13,6 @@ import { db } from "../../../firebase.config";
 export default function ManagementPage() {
   const [list, setList] = useState(new List("The best series!", []));
 
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -28,7 +27,7 @@ export default function ManagementPage() {
           show.id = doc.id;
           return show;
         });
-        console.log(showInstances)
+        console.log(showInstances);
         setList(new List(list.name, showInstances));
       } catch (error) {
         console.error("Failed fetching data", error);
@@ -39,7 +38,7 @@ export default function ManagementPage() {
     return () => {
       console.log("Cleanup");
     };
-  }, []);
+  }, [list.name]); // Add list.name as a dependency here
 
   function handleAddShow(e) {
     e.preventDefault();
@@ -82,12 +81,12 @@ export default function ManagementPage() {
     await updateDocument(db, "shows", showToUpdate.id, showObj);
 
     location.reload();  
-    }
+  }
 
-    async function deleteShow(genre, docID) {
-      await deleteDocument(db, "shows", docID);
-      location.reload();    
-    }
+  async function deleteShow(genre, docID) {
+    await deleteDocument(db, "shows", docID);
+    location.reload();    
+  }
 
   return (
     <div>
@@ -141,21 +140,21 @@ export default function ManagementPage() {
         </button>
       </form>
 
-        {list.shows.map((show, index) => {
-          return (
-            <ShowComponent
-              key={index}
-              id={show.id}
-              title={show.title}
-              year={show.year}
-              genre={show.genre}
-              episodes={show.episodes}
-              updateShow={updateShow}
-              deleteShow={deleteShow}
-              isManagementPage={true}
-            />
-          )
-        })}
+      {list.shows.map((show, index) => {
+        return (
+          <ShowComponent
+            key={index}
+            id={show.id}
+            title={show.title}
+            year={show.year}
+            genre={show.genre}
+            episodes={show.episodes}
+            updateShow={updateShow}
+            deleteShow={deleteShow}
+            isManagementPage={true}
+          />
+        );
+      })}
     </div>
   );
 }
