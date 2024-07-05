@@ -7,10 +7,14 @@
 Description: 
 CRUD App, I displayed a movie list in the Homepage, in the management page I displayed a CRUD APP where you have a form to edit, search, erase, write into this form
 
+I also, made the login, and logout functionality
+
 How to Run
 Clone the repository: git clone [https://github.com/konynunez/crud-homework.git]
 
 Navigate to the project directory: cd [project-directory]
+
+User and password: [user: testuser@gmail.com, password: 123456]
 
 Install dependencies: npm install
 
@@ -28,3 +32,6 @@ Next.js
 React
 
 Tailwind CSS
+
+firebase/firestore
+
