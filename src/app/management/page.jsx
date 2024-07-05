@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import ShowComponent from "../../components/Show";
 import { Show, List } from "../../utils/list";
@@ -8,10 +9,26 @@ import {
   updateDocument,
   deleteDocument,
 } from "../../utils/firebaseUtils";
-import { db } from "../../../firebase.config";
+import { db, auth } from "../../../firebase.config";
+
+import AddShowForm from "../../components/AddShowForm";
+import RegisterForm from "../../components/RegisterForm";
+import LoginForm from "../../components/LoginForm";
+import LogoutButton from "../../components/LogoutButton";
 
 export default function ManagementPage() {
   const [list, setList] = useState(new List("The best series!", []));
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -35,9 +52,6 @@ export default function ManagementPage() {
     }
 
     fetchData();
-    return () => {
-      console.log("Cleanup");
-    };
   }, [list.name]);
 
   function handleAddShow(e) {
@@ -58,15 +72,10 @@ export default function ManagementPage() {
     });
 
     const newList = new List(list.name, list.shows);
-    newList.addShow(newShow);  
+    newList.addShow(newShow);
 
     setList(newList);
   }
-
-  /**
-   * 
-   * @param {show} showToUpdate an instance of show class
-   */
 
   async function updateShow(showToUpdate) {
     console.log("UPDATED SHOW", showToUpdate);
@@ -77,7 +86,7 @@ export default function ManagementPage() {
       genre: showToUpdate.genre,
       episodes: showToUpdate.episodes,
     };
-  
+
     await updateDocument(db, "shows", showToUpdate.id, showObj);
 
     location.reload();  
@@ -88,73 +97,68 @@ export default function ManagementPage() {
     location.reload();    
   }
 
+  async function deleteShow(genre, docID) {
+    await deleteDocument(db, "shows", docID);
+    // const newList = new List(list.name, list.shows);
+    // newList.removeShow(genre);
+
+
+    setList(newList);
+  }
+
+  const scrollToLoginForm = () => {
+    document
+      .getElementById("login-form")
+      .scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div>
       <h1 className="py-12 text-6xl text-center bg-indigo-500">
         Management Page
       </h1>
       <h2 className="py-3 text-3xl text-center bg-indigo-100">
-        The Best Series by Far!
+        Best Content Around!
       </h2>
-      <form
-        onSubmit={handleAddShow}
-        className="p-5 m-5 border border-indigo-400"
-      >
-        <h2 className="mb-2 text-2xl">Add a Show</h2>
-        <div>
-          <input
-            className="w-1/4 p-1 border rounded border-indigo-400"
-            placeholder="Title"
-            type="text"
-            name="title"
-            required
-          />
-          <input
-            className="w-1/4 p-1 border rounded border-indigo-400"
-            placeholder="Year"
-            type="text"
-            name="year"
-            required
-          />
-          <input
-            className="w-1/4 p-1 border rounded border-indigo-400"
-            placeholder="Genre"
-            type="text"
-            name="genre"
-            required
-          />
-          <input
-            className="w-1/4 p-1 border rounded border-indigo-400"
-            placeholder="Episodes"
-            type="number"
-            name="episodes"
-            min={0}
-            required
-          />
-        </div>
-        <button
-          className="p-2 my-4 border rounded border-indigo-500 hover:bg-indigo-900"
-          type="submit"
-        >
-          Submit
-        </button>
-      </form>
 
-      {list.shows.map((show, index) => {
-        return (
-          <ShowComponent
-            key={index}
-            id={show.id}
-            title={show.title}
-            year={show.year}
-            genre={show.genre}
-            episodes={show.episodes}
-            updateShow={updateShow}
-            deleteShow={deleteShow}
-            isManagementPage={true}
-          />
-        );
-      })}
+      {!user ? (
+        <>
+          <RegisterForm />
+          <p className="text-center bg-indigo-50">
+            Already Registered?
+            <button
+              onClick={scrollToLoginForm}
+              className="text-indigo-500 hover:text-indigo-600"
+            >
+              &nbsp;Login here
+            </button>
+          </p>
+          <LoginForm />
+        </>
+      ) : (
+        <>
+          <div className="my-2 text-center">
+            <LogoutButton />
+          </div>
+
+          <AddShowForm handleAddShow={handleAddShow} />
+          {list.shows.map((show, index) => {
+            return (
+              <ShowComponent
+                id={show.id}
+                key={index}
+                title={show.title}
+                year={show.year}
+                genre={show.genre}
+                episodes={show.episodes}
+                updateShow={updateShow}
+                deleteShow={deleteShow}
+                isManagementPage={true}
+              />
+            );
+          })}
+        </>
+      )}
     </div>
   );
 }
