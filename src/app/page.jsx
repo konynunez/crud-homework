@@ -7,7 +7,7 @@ import { db } from "../../firebase.config";
 
 export default function Home() {
   const [list, setList] = useState(
-    new List("historic costume Wuxia Drama", []));
+    new List("A Drama World", []));
 
   useEffect(() => {
     async function fetchData() {
